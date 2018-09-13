@@ -6,7 +6,7 @@
   </DisplayManager>
   <General>
     <HarmonyPath dnOrder="0" path="../../../microchip/harmony/v2_06"/>
-    <Processor dnOrder="1" name="PIC32MZ1024EFG144"/>
+    <Processor dnOrder="1" name="PIC32MZ2048EFG144"/>
     <Board dnOrder="2" name=" "/>
     <ForceOptimization dnOrder="3" flag="true"/>
     <MergeStrategy dnOrder="4" flag="USER_ALL"/>
@@ -234,7 +234,7 @@
       <Template dnOrder="0">
         <Name dnOrder="0">sys_ports_static.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app/system_config/default/framework/system/ports/src</Path>
-        <Checksum dnOrder="2">8B50CCE3E1E0465DE98740719EA29179</Checksum>
+        <Checksum dnOrder="2">9F9431647873BECD2024DFA5B4B7E10C</Checksum>
       </Template>
       <Template dnOrder="1">
         <Name dnOrder="0">system_init.c</Name>
@@ -255,6 +255,7 @@
         <Name dnOrder="0">pic_adc.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/app</Path>
         <Checksum dnOrder="2">76FA8F7AD898047D8799622B3CA89E9C</Checksum>
+        <ProjectFileChecksum dnOrder="3">BF5C8DDD3F3874C0C93CFF8996A98D28</ProjectFileChecksum>
       </Template>
       <Template dnOrder="5">
         <Name dnOrder="0">system_definitions.h</Name>
@@ -309,7 +310,7 @@
       <Template dnOrder="15">
         <Name dnOrder="0">system_config.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/app/system_config/default</Path>
-        <Checksum dnOrder="2">61502936E3FC918F731B9F49C985A457</Checksum>
+        <Checksum dnOrder="2">07A2EEC141037E4C7E2C9BE166E6943D</Checksum>
       </Template>
       <Template dnOrder="16">
         <Name dnOrder="0">system_interrupt.c</Name>
@@ -320,6 +321,7 @@
         <Name dnOrder="0">pic_adc.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app</Path>
         <Checksum dnOrder="2">BCDB5F6C5E0F05FA0CE76FBFA255179B</Checksum>
+        <ProjectFileChecksum dnOrder="3">1C64AB769F58B39AEBD9E75A25EC9DD5</ProjectFileChecksum>
       </Template>
       <Template dnOrder="18">
         <Name dnOrder="0">sys_clk_pic32mz.c</Name>
@@ -337,7 +339,7 @@
       </C32>
     </CompilerItems>
     <Libraries dnOrder="3">
-      <Library dnOrder="0" value="C:/microchip/harmony/v2_06/bin/framework/peripheral/PIC32MZ1024EFG144_peripherals.a"/>
+      <Library dnOrder="0" value="C:/microchip/harmony/v2_06/bin/framework/peripheral/PIC32MZ2048EFG144_peripherals.a"/>
     </Libraries>
   </Manifest>
 </Configuration>

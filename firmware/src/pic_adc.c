@@ -54,12 +54,17 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 
 #include "pic_adc.h"
-
+/*** ADD ***/
+#include "stdio.h"
+/*** ADD ***/
 // *****************************************************************************
 // *****************************************************************************
 // Section: Global Data Definitions
 // *****************************************************************************
 // *****************************************************************************
+/*** ADD ***/
+#define ADC_USB_SEND_FORMAT "ADC DATA = 0x%03X\r\n"
+/*** ADD ***/
 
 // *****************************************************************************
 /* Application Data
@@ -174,6 +179,9 @@ USB_DEVICE_CDC_EVENT_RESPONSE PIC_ADC_USBDeviceCDCEventHandler
 
             /* This means that the host has sent some data*/
             appDataObject->writeTransferHandle = USB_DEVICE_CDC_TRANSFER_HANDLE_INVALID;
+            /*** ADD ***/
+            memset( writeBuffer, 0x00, sizeof(writeBuffer));
+            /*** ADD ***/
             break;
 
         default:
@@ -243,6 +251,10 @@ void PIC_ADC_USBDeviceEventHandler ( USB_DEVICE_EVENT event, void * eventData, u
 
 /* TODO:  Add any necessary callback functions.
 */
+static void callbackTimer( uintptr_t context, uint32_t currTick ){
+    pic_adcData.adcState = PIC_ADC_STATE_ADC_START;
+    return;
+}
 
 // *****************************************************************************
 // *****************************************************************************
@@ -259,6 +271,10 @@ void PIC_ADC_USBDeviceEventHandler ( USB_DEVICE_EVENT event, void * eventData, u
 */
 static void USB_TX_Task (void)
 {
+    /*** ADD ***/
+    uint8_t size;
+    /*** ADD ***/
+    
     if(!pic_adcData.isConfigured)
     {
         pic_adcData.writeTransferHandle = USB_DEVICE_CDC_TRANSFER_HANDLE_INVALID;
@@ -267,21 +283,77 @@ static void USB_TX_Task (void)
     {
         /* Schedule a write if data is pending 
          */
-        if ((pic_adcData.writeLen > 0)/* && (pic_adcData.writeTransferHandle == USB_DEVICE_CDC_TRANSFER_HANDLE_INVALID)*/)
-        {
+        /*** ADD ***/
+        //if ((pic_adcData.writeLen > 0)/* && (pic_adcData.writeTransferHandle == USB_DEVICE_CDC_TRANSFER_HANDLE_INVALID)*/)
+        //{
+        //    USB_DEVICE_CDC_Write(USB_DEVICE_CDC_INDEX_0,
+        //                         &pic_adcData.writeTransferHandle,
+        //                         writeBuffer, 
+        //                         pic_adcData.writeLen,
+        //                         USB_DEVICE_CDC_TRANSFER_FLAGS_DATA_COMPLETE);
+        //}
+        size = strlen(writeBuffer);
+        if ((size > 0) && (pic_adcData.writeTransferHandle == USB_DEVICE_CDC_TRANSFER_HANDLE_INVALID)){
             USB_DEVICE_CDC_Write(USB_DEVICE_CDC_INDEX_0,
                                  &pic_adcData.writeTransferHandle,
                                  writeBuffer, 
-                                 pic_adcData.writeLen,
+                                 size,
                                  USB_DEVICE_CDC_TRANSFER_FLAGS_DATA_COMPLETE);
         }
+        /*** ADD ***/
     }
 }
 
 
 /* TODO:  Add any necessary local functions.
 */
-
+/*** ADD ***/
+// ADC 取得タスク
+static void ADC_Task (void) {
+    
+    switch(pic_adcData.adcState){
+        case PIC_ADC_STATE_ADC_INIT:
+        {
+            pic_adcData.adcState = PIC_ADC_STATE_ADC_TIMERSTART;
+            break;
+        }
+        case PIC_ADC_STATE_ADC_TIMERSTART:
+        {
+            pic_adcData.timerHandle = SYS_TMR_ObjectCreate(1000, 0, callbackTimer, SYS_TMR_FLAG_PERIODIC);
+            pic_adcData.adcState = PIC_ADC_STATE_ADC_WAIT;
+            break;
+        }
+        case PIC_ADC_STATE_ADC_START:
+        {
+            DRV_ADC_Start();
+            pic_adcData.adcState = PIC_ADC_STATE_ADC_GET;
+            break;
+        }
+        case PIC_ADC_STATE_ADC_GET:
+        {
+            if(DRV_ADC_SamplesAvailable(ADCHS_AN0)){
+                pic_adcData.adcData = DRV_ADC_SamplesRead(ADCHS_AN0);
+                pic_adcData.adcState = PIC_ADC_STATE_ADC_WRITEBUFFER;
+            }
+            break;
+        }
+        case PIC_ADC_STATE_ADC_WRITEBUFFER:
+        {
+            memset( writeBuffer, 0x00, sizeof(writeBuffer) );
+            sprintf( writeBuffer, ADC_USB_SEND_FORMAT, pic_adcData.adcData );
+                pic_adcData.adcState = PIC_ADC_STATE_ADC_WAIT;
+            break;
+        }
+        case PIC_ADC_STATE_ADC_ERROR:
+        {
+            break;
+        }
+        default:
+            break;
+    }
+    return;
+}
+/*** ADD ***/
 
 // *****************************************************************************
 // *****************************************************************************
@@ -326,6 +398,11 @@ void PIC_ADC_Initialize ( void )
     /* TODO: Initialize your application's state machine and other
      * parameters.
      */
+    /*** ADD ***/
+    pic_adcData.adcState = PIC_ADC_STATE_ADC_INIT;
+    pic_adcData.adcData = 0;
+    pic_adcData.timerHandle = SYS_TMR_HANDLE_INVALID;
+    /*** ADD ***/
 }
 
 
@@ -363,6 +440,11 @@ void PIC_ADC_Tasks ( void )
                 /* Register a callback with device layer to get event notification (for end point 0) */
                 USB_DEVICE_EventHandlerSet(pic_adcData.deviceHandle,
                                            PIC_ADC_USBDeviceEventHandler, 0);
+                
+                /*** ADD ***/
+                // ADC0 オープン
+                DRV_ADC0_Open();
+                /*** ADD ***/
             
                 pic_adcData.state = PIC_ADC_STATE_SERVICE_TASKS;
             }
@@ -372,7 +454,11 @@ void PIC_ADC_Tasks ( void )
         case PIC_ADC_STATE_SERVICE_TASKS:
         {
             USB_TX_Task();
-        
+            
+            /*** Add ***/
+            ADC_Task();
+            /*** Add ***/
+            
             break;
         }
 

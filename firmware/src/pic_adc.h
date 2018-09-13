@@ -94,6 +94,18 @@ typedef enum
 
 } PIC_ADC_STATES;
 
+/*** Add ***/
+// ADC データ取得状態
+typedef enum{
+    PIC_ADC_STATE_ADC_INIT = 0,
+    PIC_ADC_STATE_ADC_TIMERSTART,
+    PIC_ADC_STATE_ADC_START,
+    PIC_ADC_STATE_ADC_GET,
+    PIC_ADC_STATE_ADC_WRITEBUFFER,
+    PIC_ADC_STATE_ADC_WAIT,
+    PIC_ADC_STATE_ADC_ERROR,
+} PIC_ADC_STATES_ADC;
+/*** Add ***/
 
 // *****************************************************************************
 /* Application Data
@@ -136,7 +148,12 @@ typedef struct
     
     /* Length of data to be written */
     uint32_t writeLen;
-
+    
+    /*** Add ***/
+    PIC_ADC_STATES_ADC adcState;
+    uint32_t adcData;
+    SYS_TMR_HANDLE timerHandle;
+    /*** Add ***/
 } PIC_ADC_DATA;
 
 

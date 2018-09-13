@@ -222,7 +222,7 @@
     <conf name="default" type="2">
       <toolsSet>
         <developmentServer>localhost</developmentServer>
-        <targetDevice>PIC32MZ1024EFG144</targetDevice>
+        <targetDevice>PIC32MZ2048EFG144</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
         <platformTool>PICkit3PlatformTool</platformTool>
@@ -233,7 +233,7 @@
       <compileType>
         <linkerTool>
           <linkerLibItems>
-            <linkerLibFileItem>C:/microchip/harmony/v2_06/bin/framework/peripheral/PIC32MZ1024EFG144_peripherals.a</linkerLibFileItem>
+            <linkerLibFileItem>C:/microchip/harmony/v2_06/bin/framework/peripheral/PIC32MZ2048EFG144_peripherals.a</linkerLibFileItem>
           </linkerLibItems>
         </linkerTool>
         <archiverTool>
@@ -264,7 +264,7 @@
         <property key="enable-unroll-loops" value="false"/>
         <property key="exclude-floating-point" value="false"/>
         <property key="extra-include-directories"
-                  value="../src;../src/system_config/default;../src/default;C:/microchip/harmony/v2_06/framework;../src/system_config/default/framework"/>
+                  value="C:/microchip/harmony/v2_06/framework;../src;../src/system_config/default;../src/default;../../../../../microchip/harmony/v2_06/framework;../src/system_config/default/framework"/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="true"/>
